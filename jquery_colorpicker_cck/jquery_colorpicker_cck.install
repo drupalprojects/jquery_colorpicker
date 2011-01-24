@@ -7,6 +7,7 @@
 function jquery_colorpicker_cck_install() {
   drupal_load('module', 'content');
   content_notify('install', 'jquery_colorpicker_cck');
+  db_query('UPDATE {system} SET weight = 1 WHERE name = "jquery_colorpicker_cck"');
 }
 
 /**

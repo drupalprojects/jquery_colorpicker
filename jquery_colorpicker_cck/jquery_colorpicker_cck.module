@@ -178,36 +178,6 @@ function jquery_colorpicker_cck_widget(&$form, &$form_state, $field, $items, $de
   return $element;
 }
 
-function jquery_colorpicker_cck_field_formatter_info() {
-  return array(
-    'default' => array(
-      'label' => t('Default'),
-      'field types' => array('colorpicker_cck_textfield'),
-      'multiple values' => CONTENT_HANDLE_CORE,
-    ),
-    'markup' => array(
-      'label' => t('Markup'),
-      'field types' => array('colorpicker_cck_textfield'),
-      'multiple values' => CONTENT_HANDLE_CORE,
-    ),
-  );
-}
-
-
-/**
- * Theme function for 'default' text field formatter.
- */
-function theme_jquery_colorpicker_cck_formatter_default($element) {
-  return '<div class="colorpicker '. check_plain($element['#item']['value']) .'">'. check_plain($element['#item']['value']) .'</div>';
-}
-
-/**
- * Theme function for 'plain' text field formatter.
- */
-function theme_jquery_colorpicker_cck_formatter_markup($element) {
-  return '<div class="colorpicker" style="background-color: '. $element['#item']['value'] .';">&nbsp;</div>';
-}
-
 /**
  * FAPI theme for an individual colorpicker_cck element.
  */
@@ -220,85 +190,5 @@ function jquery_colorpicker_cck_validate($element, &$form_state) {
     $form_state['values'][$element['#field_name']][$element['#delta']]['value'] = '#'. $form_state['values'][$element['#field_name']][$element['#delta']]['value'];
   } else {
     $form_state['values']['default_value_widget'][$element['#field_name']][0]['value'] = '#'. $form_state['values']['default_value_widget'][$element['#field_name']][0]['value'];
-  }
-}
-
-/**
- * Implementation of hook_content_is_empty().
- *
- * If the colorpicker_cck module is installed,
- * the code from that module is used instead. However,
- * In the case where the this module is installed first,
- * then the colorpicker_cck module is installed after, this
- * function still needs to exist or else the site throws up
- * errors. As such, this module is not included in the module_exists()
- * code that follows this function.
- */
-function jquery_colorpicker_cck_content_is_empty($item, $field) {
-  if (empty($item['value']) && (string)$item['value'] !== '0') {
-    return TRUE;
-  }
-  return FALSE;
-}
-
-/**
- * The following sets of functions are only included if the
- * colorpicker_cck module is not enabled. If the colorpicker_cck
- * module is enabled, these functions are ignored, and the
- * colorpicker_cck module's code is used.
- */
-if(!module_exists('colorpicker_cck')) {
-  /**
-   * Implementation of hook_field_info()
-   *
-   * If the colorpicker_cck module is installed,
-   * the code from that module is used instead.
-   */
-  function jquery_colorpicker_cck_field_info() {
-    return array(
-      'colorpicker_cck_textfield' => array(
-        'label' => t('Colorpicker'),
-        'description' => t('Store a jquery_colorpicker_cck in the database as an integer.'),
-      ),
-    );
-  }
-
-  /**
-   * Implementation of hook_field()
-   *
-   * If the colorpicker_cck module is installed,
-   * the code from that module is used instead.
-   */
-  function jquery_colorpicker_cck_field($op, &$node, $field, &$items, $teaser, $page) {
-    if($op == 'validate') {
-      if(is_array($items)) {
-        foreach ($items as $delta => $item) {
-          $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
-           if ($item['value'] != '' && !preg_match('/^#(?:(?:[a-f\d]{3}){1,2})$/i', $item['value'])) {
-            form_set_error($error_element, "'". check_plain($item['value']) ."'". t(' is not a valid hex color'));
-          }
-        }
-      }
-    }
-    return $items;
-  }
-
-  /**
-   * Implementation of hook_content_is_empty()
-   *
-   * This is a fix for the rare case where the colorpicker_cck module is installed first,
-   * followed by an installation of the jquery_colorpicker_cck module, which is in turn
-   * followed by an uninstallation of the colorpicker_cck module. In such a case, the
-   * content module still looks for the function colorpicker_cck_content_is_empty(). Since
-   * it doesn't exist anymore (because the colorpicker_cck module is uninstalled), it is
-   * added here. This prevents the site from breaking.
-   */
-  if(!function_exists('colorpicker_cck_content_is_empty')) {
-    function colorpicker_cck_content_is_empty() {
-      if (empty($item['value']) && (string)$item['value'] !== '0') {
-        return TRUE;
-      }
-      return FALSE;
-    }
   }
 }

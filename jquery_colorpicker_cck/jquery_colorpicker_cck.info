@@ -5,3 +5,4 @@ package = CCK
 
 dependencies[] = content
 dependencies[] = jquery_colorpicker 
+dependencies[] = colorpicker_cck
