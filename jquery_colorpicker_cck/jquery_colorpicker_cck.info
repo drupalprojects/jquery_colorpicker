@@ -1,8 +1,8 @@
+; $Id$
 name = Jquery Colorpicker CCK
 description = Creates a form element to be used in the form api that adds a color picker
 core = 6.x
 package = CCK
 
-dependencies[] = content
 dependencies[] = jquery_colorpicker 
 dependencies[] = colorpicker_cck

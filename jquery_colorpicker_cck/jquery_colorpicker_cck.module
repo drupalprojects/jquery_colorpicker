@@ -1,8 +1,9 @@
 <?php
 // $Id$
+
 /**
  * @file
- * This file holds the main Drupal hook functions 
+ * This file holds the main Drupal hook functions
  * and private functions for the jquery_colorpicker_cck module.
  *
  * @ingroup CCK
@@ -14,28 +15,13 @@
 function jquery_colorpicker_cck_theme() {
   return array(
     'jquery_colorpicker_cck' => array('arguments' => array('element' => NULL)),
-    'jquery_colorpicker_cck_formatter_default' => array('arguments' => array('element' => NULL)),
-    'jquery_colorpicker_cck_formatter_markup' => array('arguments' => array('element' => NULL)),
   );
 }
 
 /**
- * Implementation of hook_field_settings().
+ * Implementation of hook_widget_info().
  */
-function jquery_colorpicker_cck_field_settings($op, $field) {
-  switch ($op) {
-    case 'database columns':
-      return array('value' => array('type' => 'varchar', 'length' => 64, 'not null' => FALSE, 'sortable' => TRUE));
-    case 'views data':
-      $allowed_values = content_allowed_values($field);
-      break;
-  }
-}
-
-/**
- * Implementation of hook_cck_widget_info()
- */
-function jquery_colorpicker_cck_widget_info() {
+function jquery_colorpicker_cck_widget_info(){
   return array(
     'jquery_colorpicker_cck' => array(
       'label' => t('jQuery Colorpicker'),
@@ -64,7 +50,6 @@ function jquery_colorpicker_cck_elements() {
   return array(
     'jquery_colorpicker_cck' => array(
       '#input' => TRUE,
-  	  '#barco' => 'rojo',
       '#columns' => array('value'),
       '#delta' => 0,
       '#process' => array('jquery_colorpicker_cck_process'),
@@ -84,12 +69,12 @@ function jquery_colorpicker_cck_process($element, $edit, $form_state, $form) {
   $field_name = $element['#field_name'];
   $field = $form['#field_info'][$field_name];
   $field_key = $element['#columns'][0];
-  
+
   $value = isset($element['#value'][$field_key]) ? substr($element['#value'][$field_key],-6) : (isset($field['widget']['default_value'][0]['value']) ? substr($field['widget']['default_value'][0]['value'],1) : 'FFFFFF');
 
-  $element['value'] = array(
+  $element[$field_key] = array(
     '#type' => 'colorpicker',
-    '#default_value' => $value,
+    '#default_value' => empty($value) ? 'FFFFFF' : $value,
     '#title' => $element['#title'],
     '#description' => $element['#description'],
     '#required' => $element['#required'],
@@ -101,7 +86,7 @@ function jquery_colorpicker_cck_process($element, $edit, $form_state, $form) {
 
   // Make sure we don't wipe out element validation added elsewhere.
   if (empty($element['#element_validate'])) {
-    $element['#element_validate'] = array('jquery_colorpicker_cck_validate');
+    $element['#element_validate'] = array('jquery_colorpicker_cck_integration');
   }
   if (!empty($field['prefix'])) {
     $prefixes = explode('|', $field['prefix']);
@@ -117,26 +102,29 @@ function jquery_colorpicker_cck_process($element, $edit, $form_state, $form) {
     '#type' => 'value',
     '#value' => implode('][', array_merge($element['#parents'], array($field_key))),
   );
-
-  if(isset($edit)) {
+  
+if(isset($edit)){
     // Next we decide what background to use to render the element. In order to ensure the background exists, we create an array of
-    // the two possibilities, that we will use to compare the value submitted in the Form API definition
-    $backgrounds = array('select.png', 'select2.png');
-    // Now we check to see if the value in the Form API definition is valid. If it is, we use it, if it's not, we use a default value
-    $background = (in_array($element['#jquery_colorpicker_background'], $backgrounds)) ? $element['#jquery_colorpicker_background'] : 'select.png';
-    // Since we know the background, we can then get the URL of it to pass to the javascript function
-    $background_url = base_path() . $path .'colorpicker/images/' . $background;
-    // next we determine what the default value for the form element is. This will also be passed to the javascript function.
-    if(isset($element['#value']['value'])) {
-      $default_color = '#' . $element['#value']['value'];
-    } else {
-      $default_color = strtolower("#".$default_value);
-    }
-    // Finally we build an array of all the settings to be used by the javascript function
-    $settings = array('ids' => array($element['#id'].'-value'), 'backgrounds' => array($background_url), 'backgroundColors' => array($default_color), $element['#id'] . '-defaultColor' => $default_color);
+// the two possibilities, that we will use to compare the value submitted in the Form API definition
+$backgrounds = array('select.png', 'select2.png');
+// Now we check to see if the value in the Form API definition is valid. If it is, we use it, if it's not, we use a default value
+$background = (in_array($element['#jquery_colorpicker_background'], $backgrounds)) ? $element['#jquery_colorpicker_background'] : 'select.png';
+// Since we know the background, we can then get the URL of it to pass to the javascript function
+$background_url = url(drupal_get_path('module','jquery_colorpicker') . '/colorpicker/images/' . $background, array('absolute' => TRUE));
+// next we determine what the default value for the form element is. This will also be passed to the javascript function.
+if(isset($element['#value']['value']))
+{
+$default_color = '#' . $element['#value']['value'];
+}
+else
+{
+$default_color = strtolower("#".$default_value);
+}
+// Finally we build an array of all the settings to be used by the javascript function
+$settings = array('ids' => array($element['#id'].'-value'), 'backgrounds' => array($background_url), 'backgroundColors' => array($default_color), $element['#id'] . '-defaultColor' => $default_color);
 
-    // And we pass the settings in a namespace to the Javascript
-    drupal_add_js(array('jqueryColorpicker' => $settings), 'setting');
+// And we pass the settings in a namespace to the Javascript
+drupal_add_js(array('jqueryColorpicker' => $settings), 'setting');
   }
 
   return $element;
@@ -153,7 +141,7 @@ function jquery_colorpicker_cck_process($element, $edit, $form_state, $form) {
  *
  * Content module will set the weight, field name and delta values
  * for each form element. This is a change from earlier CCK versions
- * where the widget managed its own multiple values.
+ * where the widget managed its own multiple values. 
  *
  * If there are multiple values for this field, the content module will
  * call this function as many times as needed.
@@ -185,10 +173,18 @@ function theme_jquery_colorpicker_cck($element) {
   return $element['#children'];
 }
 
-function jquery_colorpicker_cck_validate($element, &$form_state) {
-  if(isset($form_state['values'][$element['#field_name']])) {
-    $form_state['values'][$element['#field_name']][$element['#delta']]['value'] = '#'. $form_state['values'][$element['#field_name']][$element['#delta']]['value'];
-  } else {
-    $form_state['values']['default_value_widget'][$element['#field_name']][0]['value'] = '#'. $form_state['values']['default_value_widget'][$element['#field_name']][0]['value'];
-  }
+/**
+ * This function allows to integrate the data formats between jquery_colorpicker_cck and colorpicker_cck modules
+ * 
+ * @param  $element
+ * @param  $form_state
+ */
+function jquery_colorpicker_cck_integration($element, &$form_state){
+ if(isset($form_state['values'][$element['#field_name']])){
+
+$form_state['values'][$element['#field_name']][$element['#delta']]['value'] = '#'. $form_state['values'][$element['#field_name']][$element['#delta']]['value'];
+
+ }else{
+  $form_state['values']['default_value_widget'][$element['#field_name']][0]['value'] = '#'. $form_state['values']['default_value_widget'][$element['#field_name']][0]['value'];
+ }
 }
