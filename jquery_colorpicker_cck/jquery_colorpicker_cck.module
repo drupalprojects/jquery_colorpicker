@@ -110,7 +110,7 @@ function jquery_colorpicker_cck_process($element, $edit, $form_state, $form) {
     // Now we check to see if the value in the Form API definition is valid. If it is, we use it, if it's not, we use a default value
     $background = (in_array($element['#jquery_colorpicker_background'], $backgrounds)) ? $element['#jquery_colorpicker_background'] : 'select.png';
     // Since we know the background, we can then get the URL of it to pass to the javascript function
-    $background_url = url(drupal_get_path('module','jquery_colorpicker') . '/colorpicker/images/' . $background, array('absolute' => TRUE));
+    $background_url = base_path() . $path .'colorpicker/images/' . $background;
     // next we determine what the default value for the form element is. This will also be passed to the javascript function.
     if(isset($element['#value']['value'])) {
       $default_color = '#' . $element['#value']['value'];
