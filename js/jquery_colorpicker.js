@@ -1,4 +1,3 @@
-// $Id$
 // JavaScript Document
 
 var jqueryColorpicker = {};
