@@ -1,4 +1,3 @@
-; $Id$
 name = Jquery Colorpicker CCK
 description = Creates a CCK field that provides a jQuery color picker
 core = 6.x

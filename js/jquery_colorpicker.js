@@ -1,4 +1,3 @@
-// $Id$
 // JavaScript Document
 
 // First we create a namespace for our module so that any functions or variables don't conflict with other modules
