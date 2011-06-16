@@ -66,7 +66,7 @@ Drupal.behaviors.jqueryColorpicker = function()
 			},
 			onChange: function (hsb, hex, rgb)
 			{
-				$("#" + target + " .color_picker").css("backgroundColor", "#" + hex).children("input").val(hex);
+				$("#" + target + " .color_picker").css("backgroundColor", "#" + hex).children("input").val(hex).change();;
 			}
 		});
 	});
