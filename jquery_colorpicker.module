@@ -83,12 +83,14 @@ function theme_colorpicker($element)
 {
 	$class = array('form-colorpicker');
 	$output = '';
-	$path = drupal_get_path('module', 'jquery_colorpicker') . '/';
+	$path = module_exists('libraries') && in_array('colorpicker', array_keys(libraries_get_libraries()))
+    ? libraries_get_path('colorpicker')
+    : drupal_get_path('module', 'jquery_colorpicker') . '/colorpicker';
 	// First we add the 3rd party CSS files and JS files that are required for the form elmeent
-	drupal_add_css($path . 'colorpicker/css/colorpicker.css');
-	drupal_add_js($path . 'colorpicker/js/colorpicker.js');
+	drupal_add_css($path . '/css/colorpicker.css');
+	drupal_add_js($path . '/js/colorpicker.js');
 	// Then we add the JS file required by this module
-	drupal_add_js($path . 'js/jquery_colorpicker.js');
+	drupal_add_js(drupal_get_path('module', 'jquery_colorpicker') . '/js/jquery_colorpicker.js');
 	// If IE6 support has been enabled, we set a variable that will be used later during page rendering to indicate that 
 	// IE6 specific code should be added to the <head> of the page.
 	if(variable_get('jquery_colorpicker_ie6_support', 0))
@@ -101,7 +103,7 @@ function theme_colorpicker($element)
 	// Now we check to see if the value in the Form API definition is valid. If it is, we use it, if it's not, we use a default value
 	$background = (in_array($element['#jquery_colorpicker_background'], $backgrounds)) ? $element['#jquery_colorpicker_background'] : 'select.png';
 	// Since we know the background, we can then get the URL of it to pass to the javascript function
-	$background_url = base_path() . $path .'colorpicker/images/' . $background;
+	$background_url = base_path() . $path . '/images/' . $background;
 	// next we determine what the default value for the form element is. This will also be passed to the javascript function.
 	if(isset($element['#value']))
 	{
