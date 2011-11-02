@@ -102,7 +102,7 @@ function jquery_colorpicker_requirements($phase)
 	{
 		$path =  module_exists('libraries') && in_array('colorpicker', array_keys(libraries_get_libraries()))
       ? libraries_get_path('colorpicker')
-      : drupal_get_path('module', 'jquery_colorpicker') . '/colorpicker';
+      : $path = dirname(__FILE__) . '/colorpicker';
 		// The first file we check is the 3rd party integration. Without this file, the module will not work. Other
 		// files are also required, but the assumption is made that if they got this file, they will have gotten all the other files.
 		// This is done to keep code relatively streamlined.
