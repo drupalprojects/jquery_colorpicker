@@ -21,7 +21,8 @@ function jquery_colorpicker_init()
 {
 	// Set a variable indicating that this page does NOT require IE6 code to be added to the head. Then for pages where the code is required (on any form that has
 	// the jquery element in it, when IE6 support is enabled) it will be set in the theme function for the element.
-	variable_set('jquery_colorpicker_ie6_page', 0);
+	global $jquery_colorpicker_ie6_page;
+	$jquery_colorpicker_ie6_page = FALSE;
 }
 
 /**
@@ -95,7 +96,8 @@ function theme_colorpicker($element)
 	// IE6 specific code should be added to the <head> of the page.
 	if(variable_get('jquery_colorpicker_ie6_support', 0))
 	{
-		variable_set('jquery_colorpicker_ie6_page', 1);
+    global $jquery_colorpicker_ie6_page;
+    $jquery_colorpicker_ie6_page = TRUE;
 	}
 	// Next we decide what background to use to render the element. In order to ensure the background exists, we create an array of
 	// the two possibilities, that we will use to compare the value submitted in the Form API definition
@@ -177,8 +179,9 @@ function jquery_colorpicker_validate($element, &$form_state)
  */
 function jquery_colorpicker_preprocess_page(&$vars)
 {
+  global $jquery_colorpicker_ie6_page;
 	// First we check to see if IE6 support has been enabled for the module. The following code is only executed when IE6 support is enabled
-	if(variable_get('jquery_colorpicker_ie6_page', 0))
+	if (!empty($jquery_colorpicker_ie6_page))
 	{
 		// we need to add a conditional comment with some styles, and another conditional comment with some scripts. This is taken care of below.
 		$path = base_path() . drupal_get_path('module', 'jquery_colorpicker') . '/twin_helix/';
