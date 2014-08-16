@@ -79,6 +79,8 @@ function theme_jquery_colorpicker($variables) {
 
   $class = array('form-colorpicker');
   $output = '';
+  unset($element['#prefix']);
+  unset($element['#suffix']);
 
   $path = libraries_get_path('colorpicker');
 
@@ -146,10 +148,7 @@ function theme_jquery_colorpicker($variables) {
   // Over the next few lines we build the output of the element in HTML and to send to the browser.
   _form_set_class($element, $class);
 
-  if (isset($element['#field_prefix'])) {
-    $output .= '<span class="field-prefix">' . $element['#field_prefix'] . '</span> ';
-  }
-  $output .= '<div id="' . $element['#id'] . '" class="jquery_colorpicker">';
+  $output .= '<div class="jquery_colorpicker">';
   $output .= '<div id="' . $element['#id'] . '-inner_wrapper" class="inner_wrapper">';
   $output .= '<div class="color_picker" style="background-color:' . $default_color . '">';
   $output .= '<span class="hash">#</span>';
@@ -169,9 +168,6 @@ function theme_jquery_colorpicker($variables) {
   }
   $output .= '</div>';
 
-  if (isset($element['#field_suffix'])) {
-    $output .= '<span class="field-suffix">' . $element['#field_suffix'] . '</span>';
-  }
   $element['#children'] = $output;
   $element['#theme'] = 'form_element';
   return drupal_render($element);
