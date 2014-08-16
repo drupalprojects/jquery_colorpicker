@@ -165,10 +165,10 @@ function theme_jquery_colorpicker($variables) {
   $output .= '</div>';
   if (isset($element['#cardinality'])) {
     if ($element['#cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
-      $output .= '<div>' . l(t('Remove'), '#', array('html' => TRUE, 'attributes' => array('onclick' => 'jQuery(\'#' . $element['#id'] . '\').find(\'input\').val(\'\'); jQuery(\'#' . $element['#id'] . '\').parent().parent().parent().hide(); return false;'))) . '</div>';
+      $output .= '<div>' . l(t('Remove'), '#', array('html' => TRUE, 'attributes' => array('onclick' => 'jQuery(\'#' . $element['#id'] . '\').val(\'\'); jQuery(\'#' . $element['#id'] . '\').parents(\'tr\').hide(); return false;'))) . '</div>';
     }
     else {
-      $output .= '<div>' . l(t('Clear'), '#', array('html' => TRUE, 'attributes' => array('onclick' => 'jQuery(\'#' . $element['#id'] . '\').find(\'input\').val(\'\'); jQuery(\'#' . $element['#id'] . ' .color_picker\').css("backgroundColor", "#FFF"); return false'))) . '</div>';
+      $output .= '<div>' . l(t('Clear'), '#', array('html' => TRUE, 'attributes' => array('onclick' => 'jQuery(\'#' . $element['#id'] . '\').val(\'\'); jQuery(\'#' . $element['#id'] . '\').parents(\'.color_picker\').css("backgroundColor", "#FFF"); return false'))) . '</div>';
     }
   }
   $output .= '</div>';
