@@ -75,7 +75,9 @@ function jquery_colorpicker_theme() {
 function theme_jquery_colorpicker($variables) {
   $element = $variables['element'];
 
-  $element['#id'] = isset($element['#id']) ? $element['#id'] : 'edit-' . rand(0, 9999);
+  if (!isset($element['#id'])) {
+    $element['#id'] = drupal_html_id('edit-' . implode('-', $element['#parents']));
+  }
 
   $class = array('form-colorpicker');
   $output = '';
