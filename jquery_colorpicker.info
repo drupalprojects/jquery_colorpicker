@@ -3,6 +3,3 @@ description = Creates Form API jquery colorpicker element
 core = 7.x
 
 dependencies[] = libraries
-
-files[] = jquery_colorpicker.install
-files[] = jquery_colorpicker.module
