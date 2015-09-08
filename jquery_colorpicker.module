@@ -42,6 +42,7 @@ function jquery_colorpicker_element_info() {
       '#input' => TRUE,
       '#element_validate' => array('jquery_colorpicker_validate'),
       '#jquery_colorpicker_background' => 'select.png',
+      '#process' => array('ajax_process_form'),
       '#theme' => 'jquery_colorpicker',
     ),
   );
