@@ -18,21 +18,6 @@ function jquery_colorpicker_permission() {
 }
 
 /**
- * Implements hook_menu().
- */
-function jquery_colorpicker_menu() {
-  // This creates the URL for the settings page.
-  $menu['admin/config/development/jquery_colorpicker'] = array(
-    'title' => 'Jquery Colorpicker',
-    'description' => 'Settings page for jquery colorpicker',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('jquery_colorpicker_settings'),
-    'access arguments' => array('administer jquery colorpicker'),
-  );
-  return $menu;
-}
-
-/**
  * Implements hook_elements().
  */
 function jquery_colorpicker_element_info() {
@@ -125,26 +110,6 @@ function theme_jquery_colorpicker($variables) {
       drupal_get_path('module', 'jquery_colorpicker') . '/js/jquery_colorpicker.js',
     ),
   );
-  // If IE6 support is enabled, attach the inline CSS and JS that will reside in conditional comments.
-  if (variable_get('jquery_colorpicker_ie6_support', 0)) {
-    $ie6_path = base_path() . drupal_get_path('module', 'jquery_colorpicker') . '/twin_helix/';
-    $path_to_pngfix = $ie6_path . 'iepngfix.htc';
-    $path_to_tilebg = $ie6_path . 'iepngfix_tilebg.js';
-    $css = '<!--[if lt IE 7]>' .
-      '.inner_wrapper, .color_picker, .colorpicker_color div, .colorpicker_color div div  { behavior: url("' . $path_to_pngfix . '") } ' .
-      '<![endif]-->';
-    $element['#attached']['css'][] = array(
-      'data' => $css,
-      'type' => 'inline',
-    );
-    $js = 'var script = document.createElement("script"); script.type = "text/javascript";';
-    $js .= 'script.src = "' . $path_to_tilebg . '";';
-    $js .= 'document.getElementsByTagName("head")[0].appendChild(script);';
-    $element['#attached']['js'][] = array(
-      'data' => $js,
-      'type' => 'inline',
-    );
-  }
 
   // And we pass the settings in a namespace to the Javascript.
   $element['#attached']['js'][] = array(
@@ -195,36 +160,6 @@ function jquery_colorpicker_validate($element, &$form_state) {
   elseif ($element['#value'] != '' && !preg_match('/^[0-9a-f]{6}$/i', $element['#value'])) {
     form_error($element, t("You entered an invalid value for the color. Colors must be hexadecimal, and can only contain the characters '0' to '9' and 'a' to 'f'."));
   }
-}
-
-/**
- * Callback function for the URL admin/settings/jquery_colorpicker
- * This function creates the settings page for the module
- */
-function jquery_colorpicker_settings() {
-  // First we create a fieldset to make it all look nice. If ever other settings are enabled, this will keep the page looking nice.
-  $form['ie6'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Internet Explorer 6'),
-  );
-  // Next we add a description of the necessary steps to enable IE6 support.
-  $form['ie6']['description'] = array(
-    '#value' => '<p>' . t('Internet Explorer 6 does not support transparencies in .png files. They are rendered with a non-transparent blue glow anywhere where there should be transparency. Since jquery colorpicker relies on transparent .png files to work, this means that out of the box, the jquery colorpicker will not work with IE6. You can solve this using the following steps:') .
-    '</p><ol><li>' . t('Inside the jquery colorpicker module folder (generally located at sites/all/modules), create a new folder named "twin_helix". If the jquery colorpicker module is in the standard location, this means you will have the folder sites/all/modules/jquery_colorpicker/twin_helix') .
-    '</li><li>' . t('Download the iepngfix.zip from !twin_helix', array(
-      '!twin_helix' => l(t('Twin Helix'),
-      'http://www.twinhelix.com/css/iepngfix/',
-      array('absolute' => TRUE)))) .
-    '</li><li>' . t('Unpack the zip file, and place the following three files into the twin_helix folder you created in step 1:') . '<ul><li>iepngfix.htc</li><li>blank.gif</li><li>iepngfix_tilebg.js</li></ul></li><li>' . t('Check the box below, and save this page') .
-    '</li></ol>',
-  );
-  // And finally we add a checkbox so the user can indicate that IE6 should be supported.
-  $form['ie6']['jquery_colorpicker_ie6_support'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Support IE6'),
-    '#default_value' => variable_get('jquery_colorpicker_ie6_support', 0),
-  );
-  return system_settings_form($form);
 }
 
 /**
