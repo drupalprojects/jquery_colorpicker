@@ -18,6 +18,7 @@ Installation guide
  1.- Install http://drupal.org/project/libraries
  2.- Install the module as you would any other Drupal module
  3.- Go to www.eyecon.ro/colorpicker/ and download colorpicker.zip.
+      The library can also be found at https://github.com/jaypan/jquery_colorpicker
  4.- Extract the the zip file content to the colorpicker folder in your
      libraries folder.
  5.- If you have extracted the contents right, the following filepath should
